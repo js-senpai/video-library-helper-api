@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+    videos-mysql:
+      image: mysql:latest
+      command: ['mysqld','--character-set-server=utf8mb4', '--collation-server=utf8mb4_general_ci','--default-time-zone=+02:00','--default-authentication-plugin=mysql_native_password']
+      restart: unless-stopped
+      ports:
+        - '6605:3306'
+      env_file:
+        - .env
+      networks:
+        - videos-library-network
+    api-library-videos:
+      build:
+        dockerfile: Dockerfile
+        context: .
+      networks:
+        - videos-library-network
+      env_file:
+        - .env
+      restart: unless-stopped
+      ports:
+        - "3005:3000"
+      volumes:
+        - ./videos-tasks:/app/videos-tasks
+      depends_on:
+        - videos-mysql
+networks:
+  videos-library-network:
+    driver: bridge
