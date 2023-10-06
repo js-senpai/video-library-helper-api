@@ -1,9 +1,9 @@
 version: "3.9"
 services:
     videos-mysql:
-      image: mysql:latest
+      image: mysql:8.0
       command: ['mysqld','--character-set-server=utf8mb4', '--collation-server=utf8mb4_general_ci','--default-time-zone=+02:00','--default-authentication-plugin=mysql_native_password']
-      restart: unless-stopped
+      restart: always
       ports:
         - '6605:3306'
       env_file:
