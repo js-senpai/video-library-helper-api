@@ -1,8 +1,12 @@
 import { Controller, Get, Logger } from '@nestjs/common';
+import { VideosService } from './videos.service';
 
 @Controller('videos-tasks')
 export class VideosController {
-  constructor(private readonly videoService, private readonly logger: Logger) {}
+  constructor(
+    private readonly videoService: VideosService,
+    private readonly logger: Logger,
+  ) {}
 
   @Get()
   async getAll() {

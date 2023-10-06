@@ -10,7 +10,7 @@ export class VideosTasksService {
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
   ) {}
-  @Cron('*/60 * * * *')
+  @Cron('*/1 * * * *')
   async handleCron() {
     try {
       this.logger.log('The videos tasks has started');
