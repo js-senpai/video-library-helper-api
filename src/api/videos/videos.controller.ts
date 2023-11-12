@@ -1,7 +1,7 @@
-import { Controller, Get, Logger } from '@nestjs/common';
+import { Controller, Get, Logger, Param } from '@nestjs/common';
 import { VideosService } from './videos.service';
 
-@Controller('videos-tasks')
+@Controller('videos')
 export class VideosController {
   constructor(
     private readonly videoService: VideosService,
@@ -18,10 +18,20 @@ export class VideosController {
     }
   }
 
-  @Get('/random')
+  @Get('/info/:name')
+  async get(@Param('name') name: string) {
+    try {
+      return await this.videoService.get(name);
+    } catch (e) {
+      this.logger.error(VideosController, 'Error in "get" method', e);
+      throw e;
+    }
+  }
+
+  @Get('random')
   async getRandom() {
     try {
-      return await this.videoService.getAll();
+      return await this.videoService.getRandom();
     } catch (e) {
       this.logger.error(VideosController, 'Error in "getRandom" method', e);
       throw e;

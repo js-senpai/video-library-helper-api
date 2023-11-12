@@ -15,15 +15,40 @@ export class VideosService {
     });
   }
 
+  async get(name: string): Promise<Pick<video, 'name' | 'original_name'>> {
+    return await this.prismaService.video.findFirst({
+      where: {
+        OR: [
+          {
+            name,
+          },
+          {
+            original_name: name,
+          },
+        ],
+      },
+      select: {
+        name: true,
+        original_name: true,
+      },
+    });
+  }
+
   async getRandom(): Promise<Pick<video, 'name' | 'original_name'>> {
     const totalRecords = await this.prismaService.video.count();
-    const randomIndex = Math.floor(Math.random() * totalRecords);
+    const randomIndex = Math.max(
+      0,
+      Math.floor(Math.random() * totalRecords) - 1,
+    );
     const [result] = await this.prismaService.video.findMany({
       take: 1,
       skip: randomIndex,
       select: {
         name: true,
         original_name: true,
+      },
+      orderBy: {
+        name: 'desc',
       },
     });
     return result;

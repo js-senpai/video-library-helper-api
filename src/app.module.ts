@@ -15,7 +15,7 @@ import { VideosTasksModule } from './tasks/videos-tasks/videos-tasks.module';
     }),
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'videos-tasks'),
+      rootPath: join(__dirname, '..', 'videos'),
       serveRoot: '/video',
     }),
     VideosModule,
