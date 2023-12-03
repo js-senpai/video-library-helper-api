@@ -8,13 +8,13 @@ import * as fs from 'fs';
 import { join } from 'path';
 const httpsOptions: HttpsOptions = {
   key: fs.readFileSync(
-    join(__dirname, '..', '..', 'ssl-certificates', 'private.key'),
+    join(__dirname, '..', 'ssl-certificates', 'privkey.pem'),
   ),
   cert: fs.readFileSync(
-    join(__dirname, '..', '..', 'ssl-certificates', 'server.pem'),
+    join(__dirname, '..', 'ssl-certificates', 'fullchain.pem'),
   ),
-  requestCert: true,
-  rejectUnauthorized: false,
+  // requestCert: true,
+  // rejectUnauthorized: false,
 };
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

@@ -12,6 +12,9 @@ export class VideosService {
         name: true,
         original_name: true,
       },
+      orderBy: {
+        name: 'asc',
+      },
     });
   }
 

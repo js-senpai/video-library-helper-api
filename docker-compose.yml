@@ -22,7 +22,7 @@ services:
       ports:
         - "3005:3000"
       volumes:
-        - ./videos-tasks:/app/videos-tasks
+        - ./videos:/app/videos
       depends_on:
         - videos-mysql
 networks:
