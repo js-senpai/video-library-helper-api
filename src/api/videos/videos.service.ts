@@ -48,16 +48,25 @@ export class VideosService {
   async delete(name: string): Promise<IResponseOk> {
     const getFile = await this.prismaService.video.findFirst({
       where: {
-        original_name: name,
+        name,
       },
       select: {
         id: true,
+        original_name: true,
       },
     });
     if (!getFile) {
       throw new NotFoundException(`The file with name "${name}" not found`);
     }
-    const getPath = join(__dirname, '..', '..', '..', '..', 'videos', name);
+    const getPath = join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      '..',
+      'videos',
+      getFile.original_name,
+    );
     const checkPath = fs.existsSync(getPath);
     if (checkPath) {
       await fs.promises.unlink(getPath);

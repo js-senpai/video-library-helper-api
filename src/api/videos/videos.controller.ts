@@ -66,7 +66,7 @@ export class VideosController {
 
   @Post()
   @UseInterceptors(
-    FileInterceptor('avatar', {
+    FileInterceptor('file', {
       limits: {
         files: 1,
       },
