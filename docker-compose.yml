@@ -23,6 +23,7 @@ services:
         - "3005:3000"
       volumes:
         - ./videos:/app/videos
+        - /etc/letsencrypt/live/videos.libriland.com/:/app/ssl-certificates
       depends_on:
         - videos-mysql
 networks:

@@ -7,7 +7,7 @@ import { PrismaService } from '../../common/services/prisma.service';
 import { video } from '@prisma/client';
 import { IResponseOk } from '../../common/interfaces/response.interface';
 import { join } from 'path';
-import fs from 'fs';
+import * as fs from 'fs';
 
 @Injectable()
 export class VideosService {
@@ -37,10 +37,11 @@ export class VideosService {
     if (checkFile) {
       throw new ForbiddenException(`The file is already exist`);
     }
+    console.log(file);
     return this.prismaService.video.create({
       data: {
-        original_name: file.filename,
-        name: file.originalname,
+        original_name: file.originalname,
+        name: file.originalname.replace(/\.[^/.]+$/, ''),
       },
     });
   }
@@ -63,7 +64,6 @@ export class VideosService {
       '..',
       '..',
       '..',
-      '..',
       'videos',
       getFile.original_name,
     );
@@ -71,6 +71,11 @@ export class VideosService {
     if (checkPath) {
       await fs.promises.unlink(getPath);
     }
+    await this.prismaService.video.deleteMany({
+      where: {
+        name,
+      },
+    });
     return {
       ok: 'The video has successfully deleted',
     };

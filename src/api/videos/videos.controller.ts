@@ -1,7 +1,6 @@
 import {
   Controller,
   Delete,
-  ForbiddenException,
   Get,
   HttpStatus,
   Logger,
@@ -13,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { VideosService } from './videos.service';
 import { join } from 'path';
-import fs from 'fs';
+import * as fs from 'fs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
@@ -29,7 +28,7 @@ export class VideosController {
     try {
       return await this.videoService.getAll();
     } catch (e) {
-      this.logger.error(VideosController, 'Error in "getAll" method', e);
+      this.logger.error(VideosController.name, 'Error in "getAll" method', e);
       throw e;
     }
   }
@@ -39,7 +38,7 @@ export class VideosController {
     try {
       return await this.videoService.get(name);
     } catch (e) {
-      this.logger.error(VideosController, 'Error in "get" method', e);
+      this.logger.error(VideosController.name, 'Error in "get" method', e);
       throw e;
     }
   }
@@ -49,7 +48,11 @@ export class VideosController {
     try {
       return await this.videoService.getRandom();
     } catch (e) {
-      this.logger.error(VideosController, 'Error in "getRandom" method', e);
+      this.logger.error(
+        VideosController.name,
+        'Error in "getRandom" method',
+        e,
+      );
       throw e;
     }
   }
@@ -59,7 +62,7 @@ export class VideosController {
     try {
       return await this.videoService.delete(name);
     } catch (e) {
-      this.logger.error(VideosController, 'Error in "delete" method', e);
+      this.logger.error(VideosController.name, 'Error in "delete" method', e);
       throw e;
     }
   }
@@ -72,26 +75,14 @@ export class VideosController {
       },
       storage: diskStorage({
         destination: async function (req, file, cb) {
-          try {
-            const destinationPath = join(
-              __dirname,
-              '..',
-              '..',
-              '..',
-              '..',
-              `videos`,
-            );
-            if (!fs.existsSync(destinationPath)) {
-              await fs.promises.mkdir(destinationPath, { recursive: true });
-            }
-            const checkFilePath = join(destinationPath, file.originalname);
-            if (checkFilePath) {
-              throw new ForbiddenException(`The file is already exist`);
-            }
-            cb(null, destinationPath);
-          } catch (e) {
-            console.error(e);
+          const destinationPath = join(__dirname, '..', '..', '..', `videos`);
+          if (!fs.existsSync(destinationPath)) {
+            await fs.promises.mkdir(destinationPath, { recursive: true });
           }
+          cb(null, destinationPath);
+        },
+        filename: function (req, file, cb) {
+          cb(null, file.originalname);
         },
       }),
     }),
@@ -111,7 +102,7 @@ export class VideosController {
     try {
       return await this.videoService.create(file);
     } catch (e) {
-      this.logger.error(VideosController, 'Error in "create" method', e);
+      this.logger.error(VideosController.name, 'Error in "create" method', e);
       throw e;
     }
   }
